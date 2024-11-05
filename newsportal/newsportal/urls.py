@@ -16,10 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from news.views import NewsListView, NewsSearchView, news_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 # Делаем так, чтобы все адреса из нашего приложения
 # подключались к главному приложению
     path('', include('news.urls')),
+    path('news/', NewsListView.as_view(), name='news_list'),  # Список новостей
+    # path('news/<int:news_id>/', NewsDetailView.as_view(), name='news_detail'),  # Детали новости
+    # path('news/search/', NewsSearchView.as_view(), name='news_search'),  # Поиск новостей
 ]

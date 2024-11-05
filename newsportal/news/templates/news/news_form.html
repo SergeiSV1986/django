@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if object %}Редактирование{% else %}Создание{% endif %} новости</title>
+</head>
+<body>
+    <h1>{% if object %}Редактирование{% else %}Создание{% endif %} новости</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Отображаем форму -->
+        <button type="submit">Сохранить</button>
+    </form>
+    <a href="{% url 'news_list' %}">Назад к списку новостей</a>  <!-- Ссылка на список новостей -->
+</body>
+</html>

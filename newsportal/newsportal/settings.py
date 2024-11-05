@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
+    'django_extensions',
 
     # подключаем ещё приложения
     'django.contrib.sites',
@@ -46,7 +48,7 @@ INSTALLED_APPS = [
     'newsportal',
     'fpages',
     'news',
-
+    'django_filters',
 ]
 
 SITE_ID = 1
@@ -59,8 +61,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'newsportal.urls'
@@ -68,7 +71,7 @@ ROOT_URLCONF = 'newsportal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates/flatpages')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates', 'flatpages')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

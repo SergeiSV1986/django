@@ -27,12 +27,17 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True)
+    # Определяем возможные типы новостей
+    TYPE_CHOICES = [
+        ('article', 'Статья'),  # Тип 'статья'
+        ('news', 'Новость'),     # Тип 'новость'
+    ]
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True)  # Автор новости
     post_type = models.CharField(max_length=10, choices=[('articles', 'Article'), ('news', 'News')], null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)    # Дата публикации
     categories = models.ManyToManyField(Category, through='PostCategory')
-    title = models.CharField(max_length=200, null=True)
-    text = models.TextField(null=True)
+    title = models.CharField(max_length=200, null=True)  # Заголовок новости
+    text = models.TextField(null=True)   # Содержимое новости
     rating = models.IntegerField(null=True)
 
     def like(self):

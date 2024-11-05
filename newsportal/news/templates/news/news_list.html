@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends "default.html" %}  <!-- базовый шаблон -->
+
+{% block content %}
+    <h1>Новости</h1>
+    <a href="{% url 'news_create' %}">Создать новость</a>  <!-- Ссылка на создание новости -->
+    <a href="{% url 'article_create' %}">Создать статью</a>  <!-- Ссылка на создание статьи -->
+    {% for news in news_list %}
+        <div class="news-item">
+            <h2>{{ news.title }}</h2>
+            <p>{{ news.preview }}</p>
+            <p><strong>Рейтинг:</strong> {{ news.rating }}</p>
+            <p><a href="{% url 'news_detail' news.id %}">Читать далее</a></p>  <!-- Ссылка на детальную страницу поста -->
+            <ul>
+                <li>
+                    <a href="{% url 'news_edit' news.pk %}">{{ news.title }}</a>  <!-- Ссылка на редактирование -->
+                    <a href="{% url 'news_delete' news.pk %}">Удалить</a>  <!-- Ссылка на удаление -->
+                </li>
+            </ul>
+        </div>
+    {% endfor %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if news_list.has_previous %}
+                    <a href="?page=1">&laquo; Первая</a>
+                    <a href="?page={{ news_list.previous_page_number }}">Назад</a>
+                {% endif %}
+
+                {% for i in news_list.paginator.page_range %}
+                    {% if i == news_list.number %}
+                        <strong>{{ i }}</strong>  <!-- Текущая страница -->
+                    {% elif i >= news_list.number|add:-2 and i <= news_list.number|add:2 %}
+                        <a href="?page={{ i }}">{{ i }}</a>  <!-- Ближайшие страницы -->
+                    {% endif %}
+                {% endfor %}
+
+                {% if news_list.has_next %}
+                    <a href="?page={{ news_list.next_page_number }}">Вперед</a>
+                    <a href="?page={{ news_list.paginator.num_pages }}">Последняя &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+{% endblock %}
+</body>
+</html>

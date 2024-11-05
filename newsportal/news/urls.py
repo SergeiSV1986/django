@@ -1,7 +1,7 @@
 from django.urls import path
 # Импортируем созданное нами представление
-from .views import news_list, news_detail
-
+from .views import NewsListView, news_detail, NewsSearchView, NewsCreate, NewsUpdate, NewsDelete, ArticleCreate, ArticleUpdate, ArticleDelete
+from django_filters.views import FilterView
 
 urlpatterns = [
    # path — означает путь.
@@ -11,6 +11,19 @@ urlpatterns = [
    # а Django ожидает функцию, нам надо представить этот класс в виде view.
    # Для этого вызываем метод as_view.
    # path('', PostList.as_view()),
-   path('news/', news_list, name='news_list'),
+   path('news/', NewsListView.as_view(), name='news_list'),
    path('news/<int:news_id>/', news_detail, name='news_detail'),
+   path('news/search/', NewsSearchView.as_view(), name='news_search'),
+   # Маршрут для создания новостей
+   path('news/create/', NewsCreate.as_view(), name='news_create'),
+   # Маршрут для редактирования новостей по их первичному ключу (pk)
+   path('news/<int:pk>/edit/', NewsUpdate.as_view(), name='news_edit'),
+   # Маршрут для удаления новостей по их первичному ключу (pk)
+   path('news/<int:pk>/delete/', NewsDelete.as_view(), name='news_delete'),
+   # Маршрут для создания статей
+   path('articles/create/', ArticleCreate.as_view(), name='article_create'),
+   # Маршрут для редактирования статей по их первичному ключу (pk)
+   path('articles/<int:pk>/edit/', ArticleUpdate.as_view(), name='article_edit'),
+   # Маршрут для удаления статей по их первичному ключу (pk)
+   path('articles/<int:pk>/delete/', ArticleDelete.as_view(), name='article_delete'),
 ]
