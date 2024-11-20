@@ -1,6 +1,6 @@
 from django.urls import path
 # Импортируем созданное нами представление
-from .views import NewsListView, news_detail, NewsSearchView, NewsCreate, NewsUpdate, NewsDelete, ArticleCreate, ArticleUpdate, ArticleDelete
+from .views import NewsListView, news_detail, NewsSearchView, NewsCreate, ArticleCreate, ArticleUpdate, ArticleDelete
 from django_filters.views import FilterView
 
 urlpatterns = [
@@ -17,9 +17,9 @@ urlpatterns = [
    # Маршрут для создания новостей
    path('news/create/', NewsCreate.as_view(), name='news_create'),
    # Маршрут для редактирования новостей по их первичному ключу (pk)
-   path('news/<int:pk>/edit/', NewsUpdate.as_view(), name='news_edit'),
+   path('news/<int:pk>/edit/', ArticleUpdate.as_view(), name='news_edit'),
    # Маршрут для удаления новостей по их первичному ключу (pk)
-   path('news/<int:pk>/delete/', NewsDelete.as_view(), name='news_delete'),
+   path('news/<int:pk>/delete/', ArticleDelete.as_view(), name='news_delete'),
    # Маршрут для создания статей
    path('articles/create/', ArticleCreate.as_view(), name='article_create'),
    # Маршрут для редактирования статей по их первичному ключу (pk)

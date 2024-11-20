@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+
 {% extends "default.html" %}  <!-- базовый шаблон -->
 
 {% block content %}
@@ -19,31 +20,36 @@
             <p><a href="{% url 'news_detail' news.id %}">Читать далее</a></p>  <!-- Ссылка на детальную страницу поста -->
             <ul>
                 <li>
-                    <a href="{% url 'news_edit' news.pk %}">{{ news.title }}</a>  <!-- Ссылка на редактирование -->
+                    <a href="{% url 'news_edit' news.pk %}">{{ news.title }} Редактировать </a>  <!-- Ссылка на редактирование -->
                     <a href="{% url 'news_delete' news.pk %}">Удалить</a>  <!-- Ссылка на удаление -->
                 </li>
             </ul>
         </div>
-    {% endfor %}
+    {% endfor %}\
+{% endblock content %}
 
-        <div class="pagination">
-            <span class="step-links">
-                {% if news_list.has_previous %}
-                    <a href="?page=1">&laquo; Первая</a>
-                    <a href="?page={{ news_list.previous_page_number }}">Назад</a>
+{% block navigation %}
+<div class="pagination"> <!-- Добавляем пагинацию на страницу -->
+                <span class="step-links">
+                {% if page_obj.has_previous %}  <!-- Информация о предыдущих страницах -->
+                <a href="?page=1">&laquo; Первая </a>
+                    <a href="?page=1">1</a>
+                    {% if page_obj.previous_page_number != 1 %}
+                        ...
+                        <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }} </a>
+                    {% endif %}
                 {% endif %}
 
-                {% for i in news_list.paginator.page_range %}
-                    {% if i == news_list.number %}
-                        <strong>{{ i }}</strong>  <!-- Текущая страница -->
-                    {% elif i >= news_list.number|add:-2 and i <= news_list.number|add:2 %}
-                        <a href="?page={{ i }}">{{ i }}</a>  <!-- Ближайшие страницы -->
-                    {% endif %}
-                {% endfor %}
+                <!-- Информация о текущей странице -->
+                {{ page_obj.number }}
 
-                {% if news_list.has_next %}
-                    <a href="?page={{ news_list.next_page_number }}">Вперед</a>
-                    <a href="?page={{ news_list.paginator.num_pages }}">Последняя &raquo;</a>
+                <!-- Информация о следующих страницах -->
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                    {% if page_obj.num_pages != page_obj.next_page_number %}
+                        ...
+                        <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}Последняя </a>
+                    {% endif %}
                 {% endif %}
             </span>
         </div>

@@ -7,47 +7,48 @@
 <body>
 {% extends "default.html" %}
 
+{% load custom_tags %}
 {% block content %}
     <h1>Поиск новостей</h1>
 
     <form method="get" action="{% url 'news_search' %}">
-        <input type="text" name="title" placeholder="Название новости" value="{{ request.GET.title }}">
-        <input type="text" name="author" placeholder="Имя автора" value="{{ request.GET.author }}">
-        <input type="date" name="date" value="{{ request.GET.date }}">
+        {{ filterset.form.as_p }}
         <button type="submit">Поиск</button>
     </form>
 
-    {% if news_list %}
+    {% if news_search %}
         <h2>Результаты поиска:</h2>
-        {% for news in news_list %}
+        {% for news in news_search %}
             <div class="news-item">
                 <h2>{{ news.title }}</h2>
                 <p>{{ news.preview }}</p>
                 <p><strong>Рейтинг:</strong> {{ news.rating }}</p>
-                <p><a href="{% url 'post_detail' news.id %}">Читать далее</a></p>
+                <p><a href="{% url 'news_detail' news.id %}">Читать далее</a></p>
             </div>
         {% endfor %}
-
-        <div class="pagination">
-            <span class="step-links">
-                {% if news_list.has_previous %}
-                    <a href="?page=1">&laquo; Первая</a>
-                    <a href="?page={{ news_list.previous_page_number }}">Назад</a>
-                {% endif %}
-
-                <span class="current">
-                    Страница {{ news_list.number }} из {{ news_list.paginator.num_pages }}.
-                </span>
-
-                {% if news_list.has_next %}
-                    <a href="?page={{ news_list.next_page_number }}">Вперед</a>
-                    <a href="?page={{ news_list.paginator.num_pages }}">Последняя &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
     {% else %}
         <p>Нет новостей, соответствующих вашему запросу.</p>
     {% endif %}
+{% endblock %}
+
+{% block navigation %}
+ <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?{% url_replace page=1 %}">&laquo; Первая</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+                {% endif %}
+
+                <span class="current">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Последняя &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
 {% endblock %}
 </body>
 </html>

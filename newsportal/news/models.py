@@ -1,12 +1,13 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 # Create your models here.
 
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
-
+    name = models.CharField(max_length=100, null=True)
     def update_rating(self):
         # Суммарный рейтинг постов автора * 3
         post_rating = sum(post.rating * 3 for post in self.post_set.all())
@@ -29,16 +30,19 @@ class Category(models.Model):
 class Post(models.Model):
     # Определяем возможные типы новостей
     TYPE_CHOICES = [
-        ('article', 'Статья'),  # Тип 'статья'
-        ('news', 'Новость'),     # Тип 'новость'
+        ('article', 'Article'),  # Тип 'статья'
+        ('news', 'News'),     # Тип 'новость'
     ]
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True)  # Автор новости
     post_type = models.CharField(max_length=10, choices=[('articles', 'Article'), ('news', 'News')], null=True)
     created_at = models.DateTimeField(auto_now_add=True)    # Дата публикации
     categories = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=200, null=True)  # Заголовок новости
-    text = models.TextField(null=True)   # Содержимое новости
-    rating = models.IntegerField(null=True)
+    rating = models.IntegerField(default=0, null=True)
+    text = models.TextField(null=True)  # Добавляем поле для текста поста
+
+    def get_absolute_url(self):
+        return reverse('news_list')  #  имя  URL для перехода после создания новости
 
     def like(self):
         self.rating += 1
@@ -50,6 +54,9 @@ class Post(models.Model):
 
     def preview(self):
         return self.text[:124] + '...'
+
+    def __str__(self):
+        return self.title
 
 
 class PostCategory(models.Model):
